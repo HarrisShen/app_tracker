@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/update.css') }}">
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    </head>
+    <body>
+        <form action = "{{ url_for('addrec') }}" method = "POST">
+            <h3>Job Application Update</h3>
+            Company *<br>
+            <input type = "text" name = "company" required/></br>
+            
+            Position/Program *<br>
+            <textarea name = "position" required></textarea><br>
+
+            <input type="checkbox" id="new_entry" name="new_entry"/>
+            <label for="new_entry">New Entry</label><br>
+
+            <div name="new_entry_dropdown" id="new_entry_dropdown">
+                Link<br>
+                <textarea name="link" id="link"></textarea><br>
+    
+                Hiring Status<br>
+                <input type="text" name="posting_status" id="posting_status" value="Open"/><br>
+
+                Application Deadline<br>
+                <input type="date" name="app_deadline" id="app_deadline"/><br>
+    
+                Company type<br>
+                <input type="text" name="company_type" id="company_type"/><br>
+    
+                Priority<br>
+                <select name="priority" id="priority">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select><br>
+    
+                Application Portal<br>
+                <textarea name="app_portal" id="app_portal"></textarea><br>
+            </div>
+
+            Status<br>
+            <select name="status" id="status">
+                <option value="None"></option>
+                <option value="Ready">1-Ready</option>
+                <option value="Ongoing">2-Ongoing</option>
+                <option value="Submitted">3-Submitted</option>
+                <option value="Interview">4-Interview</option>
+                <option value="Rejected">5-Rejected</option>
+                <option value="Offer">6-Offer</option>
+            </select><br>
+            
+            Time<br>
+            <input type="datetime-local" name="time"/><br>
+
+            Comment<br>
+            <textarea name = "note"></textarea><br>
+            <input type = "submit" value = "submit" /><br>
+         </form>
+         <a href = "/">Go back to home page</a>
+    </body>
+    <script>
+        $('#new_entry').change(function() {
+            if(this.checked != true){
+                $("#new_entry_dropdown").hide();
+            }
+            else{
+                    $("#new_entry_dropdown").show();
+            }
+            });
+    </script>
+</html>

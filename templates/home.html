@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Application Tracker</title>
+    </head>
+    <body>
+        <h1>Application Tracker</h1>
+
+        <a href="{{ url_for('update_record') }}">Update record</a>
+
+        <table border = 1>
+            <thead>
+                <td>Company</td>
+                <td>Position/Program</td>
+                <td>Hiring Status</td>
+                <td>Deadline</td>
+                <td>Company Type</td>
+                <td>Priority</td>
+                <td>Application Portal</td>
+                <td>Status</td>
+                <td>Comment</td>
+            </thead>
+            {% for row in rows %}
+            <tr>
+                <td>{{row["company"]}}</td>
+                <td><a href="{{ row['weblink'] }}" target="_blank">{{row["position"]}}</a></td>
+                <td>{{row["posting_status"]}}</td>
+                <td>{{row["deadline"]}}</td>
+                <td>{{row["company_type"]}}</td>
+                <td>{{row["app_priority"]}}</td>
+                <td>{% if row['app_portal'] %}<a href="{{row['app_portal']}}" target="_blank">Link</a>{% endif %}</td>
+                <td>{{row["app_status"]}}</td>
+                <td>{{row['note']}}</td>	
+            </tr>
+            {% endfor %}
+        </table>
+    </body>
+</html>
