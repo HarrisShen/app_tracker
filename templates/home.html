@@ -1,38 +1,36 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Application Tracker</title>
-    </head>
-    <body>
-        <h1>Application Tracker</h1>
+{% extends 'base.html' %}
 
-        <a href="{{ url_for('update_record') }}">Update record</a>
+{% block title%}Application Tracker{% endblock %}
 
-        <table border = 1>
-            <thead>
-                <td>Company</td>
-                <td>Position/Program</td>
-                <td>Hiring Status</td>
-                <td>Deadline</td>
-                <td>Company Type</td>
-                <td>Priority</td>
-                <td>Application Portal</td>
-                <td>Status</td>
-                <td>Comment</td>
-            </thead>
-            {% for row in rows %}
-            <tr>
-                <td>{{row["company"]}}</td>
-                <td><a href="{{ row['weblink'] }}" target="_blank">{{row["position"]}}</a></td>
-                <td>{{row["posting_status"]}}</td>
-                <td>{{row["deadline"]}}</td>
-                <td>{{row["company_type"]}}</td>
-                <td>{{row["app_priority"]}}</td>
-                <td>{% if row['app_portal'] %}<a href="{{row['app_portal']}}" target="_blank">Link</a>{% endif %}</td>
-                <td>{{row["app_status"]}}</td>
-                <td>{{row['note']}}</td>	
-            </tr>
-            {% endfor %}
-        </table>
-    </body>
-</html>
+{% block content%}
+    <h1>Application Tracker</h1>
+
+    <a href="{{ url_for('update_record') }}">Update record</a>
+
+    <table class="table table-striped table-hover">
+        <thead>
+            <th scope="col">Company</th>
+            <th scope="col">Position/Program</th>
+            <th scope="col">Hiring Status</th>
+            <th scope="col">Deadline</th>
+            <th scope="col">Company Type</th>
+            <th scope="col">Priority</th>
+            <th scope="col">Application Portal</th>
+            <th scope="col">Status</th>
+            <th scope="col">Comment</th>
+        </thead>
+        {% for row in rows %}
+        <tr>
+            <td>{{row["company"]}}</td>
+            <td><a href="{{ row['weblink'] }}" target="_blank">{{row["position"]}}</a></td>
+            <td>{{row["posting_status"]}}</td>
+            <td>{{row["deadline"]}}</td>
+            <td>{{row["company_type"]}}</td>
+            <td>{{row["app_priority"]}}</td>
+            <td>{% if row['app_portal'] %}<a href="{{row['app_portal']}}" target="_blank">Link</a>{% endif %}</td>
+            <td>{{row["app_status"]}}</td>
+            <td>{{row['note']}}</td>	
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

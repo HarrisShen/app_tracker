@@ -1,7 +1,8 @@
-<!DOCTYPE html>
-<html>
-    <body>
-        result of addition : {{ msg }}
-        <h3><a href = "\">go back to home page</a></h3>
-    </body>
-</html>
+{% extends 'base.html' %}
+
+{% block title%}Application Tracker - Result{% endblock %}
+
+{% block content%}
+    result of addition : {{ msg }}
+    <h3><a href = "\">go back to home page</a></h3>
+{% endblock %}

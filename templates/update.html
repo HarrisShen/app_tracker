@@ -1,47 +1,50 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/update.css') }}">
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    </head>
-    <body>
-        <form action = "{{ url_for('addrec') }}" method = "POST">
-            <h3>Job Application Update</h3>
-            Company *<br>
-            <input type = "text" name = "company" required/></br>
+{% extends 'base.html' %}
+
+{% block title%}Application Tracker - Update{% endblock %}
+
+{% block content%}
+    <h3>Job Application Update</h3>
+    <form action="{{ url_for('addrec') }}" method="POST">
+        <div class="container">
+            <label for="company" class="form-label">Company *</label>
+            <input type="text" class="form-control" id="company" name="company" required/>
             
-            Position/Program *<br>
-            <textarea name = "position" required></textarea><br>
+            <label for="position" class="form-label">Position/Program *</label>
+            <input type="text" class="form-control" id="position" name = "position" required></input>          
+        </div>
 
-            <input type="checkbox" id="new_entry" name="new_entry"/>
-            <label for="new_entry">New Entry</label><br>
+        <div class="container">
+            <input class="form-check-input" type="checkbox" id="new_entry" name="new_entry"/>
+            <label class="form-check-label" for="new_entry">New Entry</label>            
+        </div>
 
-            <div name="new_entry_dropdown" id="new_entry_dropdown">
-                Link<br>
-                <textarea name="link" id="link"></textarea><br>
-    
-                Hiring Status<br>
-                <input type="text" name="posting_status" id="posting_status" value="Open"/><br>
+        <div class="container" name="new_entry_dropdown" id="new_entry_dropdown">
+            <label for="link" class="form-label">Link</label>
+            <textarea class="form-control" name="link" id="link"></textarea>
 
-                Application Deadline<br>
-                <input type="date" name="app_deadline" id="app_deadline"/><br>
-    
-                Company type<br>
-                <input type="text" name="company_type" id="company_type"/><br>
-    
-                Priority<br>
-                <select name="priority" id="priority">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                </select><br>
-    
-                Application Portal<br>
-                <textarea name="app_portal" id="app_portal"></textarea><br>
-            </div>
+            <label for="posting_status" class="form-label">Hiring Status</label>
+            <input class="form-control" type="text" name="posting_status" id="posting_status" value="Open"/>
 
-            Status<br>
-            <select name="status" id="status">
+            <label for="app_deadline" class="form-label">Application Deadline</label>
+            <input class="form-control" type="date" name="app_deadline" id="app_deadline"/>
+
+            <label for="company_type" class="form-label">Company Type</label>
+            <input class="form-control" type="text" name="company_type" id="company_type"/>
+
+            <label for="priority" class="form-label">Priority</label>
+            <select class="form-select" name="priority" id="priority">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+            </select>
+
+            <label for="app_portal" class="form-label">Application Portal</label>
+            <textarea class="form-control" name="app_portal" id="app_portal"></textarea>
+        </div>
+
+        <div class="container">
+            <label for="status" class="form-label">Status</label>
+            <select class="form-select" name="status" id="status">
                 <option value="None"></option>
                 <option value="Ready">1-Ready</option>
                 <option value="Ongoing">2-Ongoing</option>
@@ -49,25 +52,28 @@
                 <option value="Interview">4-Interview</option>
                 <option value="Rejected">5-Rejected</option>
                 <option value="Offer">6-Offer</option>
-            </select><br>
+            </select>
             
-            Time<br>
+            <label for="time" class="form-label">Time</label><br>
             <input type="datetime-local" name="time"/><br>
 
-            Comment<br>
-            <textarea name = "note"></textarea><br>
-            <input type = "submit" value = "submit" /><br>
-         </form>
-         <a href = "/">Go back to home page</a>
-    </body>
+            <label for="note" class="form-label">Comment</label>
+            <textarea class="form-control" name = "note"></textarea>
+        </div>
+
+        <input type = "submit" value = "submit" />
+    </form>
+
+    <a href = "/">Go back to home page</a>
+    
     <script>
         $('#new_entry').change(function() {
             if(this.checked != true){
                 $("#new_entry_dropdown").hide();
             }
             else{
-                    $("#new_entry_dropdown").show();
+                $("#new_entry_dropdown").show();
             }
             });
-    </script>
-</html>
+    </script>    
+{% endblock %}
