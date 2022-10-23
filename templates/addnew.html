@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title%}Application Tracker - Update{% endblock %}
+
+{% block content%}
+    <h3>Job Application Update</h3>
+    <form action="{{ url_for('addrec') }}" method="POST">
+        <div class="container mt-3">
+            <div class="row g-2 mt-3">
+                <div class="col">
+                    <label for="company" class="form-label">Company *</label>
+                    <input type="text" class="form-control" id="company" name="company" required/>
+                </div>
+                <div class="col">
+                    <label for="position" class="form-label">Position/Program *</label>
+                    <input type="text" class="form-control" id="position" name = "position" required></input>                  
+                </div> 
+            </div>            
+            <a id="moreInfoButton" data-bs-toggle="collapse" href="#newEntryDropdown" role="button" aria-expanded="false" aria-controls="newEntryDropdown">More details</a>          
+        </div>
+
+        <div class="collapse container mt-3" name="new_entry_dropdown" id="newEntryDropdown">
+            <label for="link" class="form-label">Link</label>
+            <textarea class="form-control" name="link" id="link"></textarea>
+
+            <div class="row g-2">
+                <div class="col">
+                    <label for="posting_status" class="form-label">Hiring Status</label>
+                    <select class="form-select" name="posting_status" id="posting_status">
+                        <option value="Open">Open</option>
+                        <option value="Closed">Closed</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label for="app_deadline" class="form-label">Application Deadline</label>
+                    <input class="form-control" type="date" name="app_deadline" id="app_deadline"/>                    
+                </div>
+            </div>
+            <div class="row g-2">
+                <div class="col">
+                    <label for="company_type" class="form-label">Company Type</label>
+                    <input class="form-control" type="text" name="company_type" id="company_type"/>                    
+                </div>
+                <div class="col">
+                    <label for="priority" class="form-label">Priority</label>
+                    <select class="form-select" name="priority" id="priority">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>                    
+                </div>
+            </div>
+            <label for="app_portal" class="form-label">Application Portal</label>
+            <textarea class="form-control" name="app_portal" id="app_portal"></textarea>
+        </div>
+
+        <div class="container mt-3">
+            <div class="row g-2 mt-3">
+                <div class="col">
+                    <label for="status" class="form-label">Application Status</label>
+                    <select class="form-select" name="status" id="status">
+                        <option value="None"></option>
+                        <option value="Ready">1-Ready</option>
+                        <option value="Ongoing">2-Ongoing</option>
+                        <option value="Submitted">3-Submitted</option>
+                        <option value="Interview">4-Interview</option>
+                        <option value="Rejected">5-Rejected</option>
+                        <option value="Offer">6-Offer</option>
+                    </select>                    
+                </div>
+                <div class="col">
+                    <label for="time" class="form-label">Update Time</label><br>
+                    <input class="form-control" type="datetime-local" name="time"/><br>                    
+                </div>
+            </div>
+            <div>
+                <label for="note" class="form-label">Comment</label>
+                <textarea class="form-control" name = "note"></textarea>                
+            </div>
+        </div>
+
+        <div class="container mt-3">
+            <input class="btn btn-primary" type = "submit" value = "Submit" />
+            <a class="btn btn-secondary" href = "/">Back</a>
+        </div>            
+    </form>
+    <script>
+        $('#moreInfoButton').click(function(){
+            $(this).text(function(i, old){
+                return old == "More details" ? "Less details" : "More details";
+            })
+        })
+    </script>    
+{% endblock %}

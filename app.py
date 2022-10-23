@@ -3,7 +3,7 @@ import sqlite3
 
 app = Flask(__name__)
 
-DATABASE = 'app_data.sqlite'
+DATABASE = 'test_app_data.sqlite'
 
 
 def get_db():
@@ -32,9 +32,9 @@ def homepage():
     return render_template("home.html", rows=rows)
 
 
-@app.route("/update")
-def update_record():
-    return render_template("update.html")
+@app.route("/add")
+def add_record():
+    return render_template("addnew.html")
 
 
 @app.route("/addrec", methods=["POST"])
@@ -50,13 +50,12 @@ def addrec():
     status = request.form["status"]
     time = request.form["time"]
     note = request.form["note"]
-    if "new_entry" in request.form:
-        link = request.form["link"]
-        posting_status = request.form["posting_status"]
-        app_deadline = request.form["app_deadline"]
-        company_type = request.form["company_type"]
-        priority = request.form["priority"]
-        app_portal = request.form["app_portal"]
+    link = request.form["link"]
+    posting_status = request.form["posting_status"]
+    app_deadline = request.form["app_deadline"]
+    company_type = request.form["company_type"]
+    priority = request.form["priority"]
+    app_portal = request.form["app_portal"]
 
     with app.app_context():
         db = get_db()
@@ -64,17 +63,11 @@ def addrec():
         try:
             if status != "None":
                 cur.execute(insert_app_log, (company, position, status, time, note))
-            if "new_entry" in request.form:
-                cur.execute(
-                    insert_job_entry,
-                    (company, position, link, posting_status, app_deadline, company_type, priority, app_portal, status,
-                     note)
-                )
-            else:
-                cur.execute(
-                    update_job_entry,
-                    (status, company, position)
-                )
+            cur.execute(
+                insert_job_entry,
+                (company, position, link, posting_status, app_deadline, company_type, priority, app_portal, status,
+                    note)
+            )
             db.commit()
             msg = "Record successfully added"
         except Exception as e:
