@@ -9,6 +9,8 @@
 {% endblock %}
 
 {% block content%}
+    <script src="{{ url_for('static', filename='home.js') }}"></script>
+
     <a class="btn btn-primary" href="{{ url_for('add_record') }}">Add record</a>
 
     <table class="table table-striped table-hover" id="tableAppInfo">
@@ -33,12 +35,12 @@
             <td>{{row["app_priority"]}}</td>
             <td>{% if row['app_portal'] %}<a href="{{row['app_portal']}}" target="_blank">Link</a>{% endif %}</td>
             <td class="tdStatus">{{row["app_status"]}}</td>
-            <td>{{row['note']}}</td>	
+            <td class="tdNote">{{row['note']}}</td>	
         </tr>
         {% endfor %}
     </table>
-    <div class="hidden" hidden>
-        <select class="form-select update-status" name="status">
+    <div class="hidden div-update-status" hidden>
+        <select class="form-select update-status" name="status" aria-label="update-status">
             <option value="None"></option>
             <option value="Ready">Ready</option>
             <option value="Ongoing">Ongoing</option>
@@ -46,37 +48,10 @@
             <option value="Interview">Interview</option>
             <option value="Rejected">Rejected</option>
             <option value="Offer">Offer</option>
-        </select>          
+        </select>
     </div>
-    <script>
-        $(document).ready(function(){
-            $(document).click(function(){
-                let sel_box = $('.tdStatus').find('select');
-                let td_to_revert = sel_box.parent();
-                td_to_revert.html(sel_box.val());
-            })
-            $('.tdStatus').click(function(){
-                event.stopPropagation();
-            })
-            $('.tdStatus').dblclick(function(){
-                event.stopPropagation();
-                if($(this).text() === "None") return;
-                if($(this).children().length === 0){
-                    let sel_box = $('div.hidden').clone();
-                    let curr_val = $(this).text();
-                    sel_box.children().children('option[value=' + curr_val + ']').attr("selected", "selected");
-                    $(this).html(sel_box.html());
-                    // $(this).find('option').click(function(){
-                    //     console.log($(this));
-                    // });
-                    $(this).find('select').one('change', function(){
-                        curr_val = $(this).val();
-                        console.log(curr_val);
-                        $.post('/', {status: curr_val});
-                        $(this).parent().html(curr_val);
-                    });
-                }
-            });
-        });
-    </script>
+
+    <div class="hidden div-update-note" hidden>
+        <textarea class="form-control update-note" name = "note" aria-label="update-note"></textarea>
+    </div>
 {% endblock %}

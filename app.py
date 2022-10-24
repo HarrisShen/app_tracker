@@ -1,9 +1,10 @@
+from turtle import pos
 from flask import Flask, render_template, request, g
 import sqlite3
 
 app = Flask(__name__)
 
-DATABASE = 'test_app_data.sqlite'
+DATABASE = 'app_data.sqlite'
 
 
 def get_db():
@@ -36,6 +37,10 @@ def homepage():
 def add_record():
     return render_template("addnew.html")
 
+@app.route("/api/update", methods=["POST"])
+def update():
+    print(request.get_data())
+    return ""
 
 @app.route("/addrec", methods=["POST"])
 def addrec():
@@ -43,7 +48,7 @@ def addrec():
     insert_app_log = "INSERT INTO app_log VALUES (?,?,?,?,?)"
     insert_job_entry = "INSERT INTO job_info VALUES (?,?,?,?,?,?,?,?,?,?)"
     update_job_entry = "UPDATE job_info SET app_status = (?) WHERE company = (?) AND position = (?)"
-    select_job_entry = "SELECT job_info WHERE company = (?) AND position = (?)"
+    select_job_entry = "SELECT * from job_info WHERE company = (?) AND position = (?)"
 
     company = request.form["company"]
     position = request.form["position"]
@@ -61,13 +66,23 @@ def addrec():
         db = get_db()
         cur = db.cursor()
         try:
+            cur.execute(
+                select_job_entry,
+                (company, position)
+            )
+            rows = cur.fetchall()
+            if rows and status != None:
+                cur.execute(
+                    update_job_entry,
+                    (status, company, position)
+                )
+            else:
+                cur.execute(
+                    insert_job_entry,
+                    (company, position, link, posting_status, app_deadline, company_type, priority, app_portal, status, note)
+                )                
             if status != "None":
                 cur.execute(insert_app_log, (company, position, status, time, note))
-            cur.execute(
-                insert_job_entry,
-                (company, position, link, posting_status, app_deadline, company_type, priority, app_portal, status,
-                    note)
-            )
             db.commit()
             msg = "Record successfully added"
         except Exception as e:
