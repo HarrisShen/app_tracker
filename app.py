@@ -1,10 +1,9 @@
-from turtle import pos
-from flask import Flask, render_template, request, g
+from flask import Flask, render_template, request, g, jsonify
 import sqlite3
 
 app = Flask(__name__)
 
-DATABASE = 'app_data.sqlite'
+DATABASE = 'test_app_data.sqlite'
 
 
 def get_db():
@@ -30,6 +29,7 @@ def homepage():
         cur.execute("select * from job_info")
 
         rows = cur.fetchall()
+        rows = reversed(rows)
     return render_template("home.html", rows=rows)
 
 
@@ -39,8 +39,31 @@ def add_record():
 
 @app.route("/api/update", methods=["POST"])
 def update():
-    print(request.get_data())
-    return ""
+    request_data = request.get_json()
+    print(request_data)
+
+    insert_app_log = "INSERT INTO app_log VALUES (?,?,?,?,?)"
+    update_job_entry = "UPDATE job_info SET app_status = (?) WHERE company = (?) AND position = (?)"
+
+    company = request_data["company"]
+    position = request_data["position"]
+    status = request_data["status"]
+    time = request_data["time"]
+    note = ""
+
+    with app.app_context():
+        db = get_db()
+        cur = db.cursor()
+        try:
+            cur.execute(update_job_entry, (status, company, position))
+            cur.execute(insert_app_log, (company, position, status, time, note))
+            db.commit()
+            msg = "Record successfully updated"
+        except Exception as e:
+            print(e)
+            db.rollback()
+            msg = "Update failed"
+    return jsonify({"message": msg})
 
 @app.route("/addrec", methods=["POST"])
 def addrec():

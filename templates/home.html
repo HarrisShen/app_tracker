@@ -27,8 +27,8 @@
         </thead>
         {% for row in rows %}
         <tr>
-            <td>{{row["company"]}}</td>
-            <td><a href="{{ row['weblink'] }}" target="_blank">{{row["position"]}}</a></td>
+            <td class="tdComp">{{row["company"]}}</td>
+            <td class="tdPos"><a href="{{ row['weblink'] }}" target="_blank">{{row["position"]}}</a></td>
             <td>{{row["posting_status"]}}</td>
             <td>{{row["deadline"]}}</td>
             <td>{{row["company_type"]}}</td>
@@ -40,7 +40,7 @@
         {% endfor %}
     </table>
     <div class="hidden div-update-status" hidden>
-        <select class="form-select update-status" name="status" aria-label="update-status">
+        <select class="form-select update update-status" name="status" aria-label="update-status">
             <option value="None"></option>
             <option value="Ready">Ready</option>
             <option value="Ongoing">Ongoing</option>
@@ -52,6 +52,24 @@
     </div>
 
     <div class="hidden div-update-note" hidden>
-        <textarea class="form-control update-note" name = "note" aria-label="update-note"></textarea>
+        <textarea class="form-control update update-note" name = "note" aria-label="update-note"></textarea>
     </div>
+
+    <script>
+        window.addEventListener('click', () => {
+            let tdElement = revertTd('tdStatus');
+            if(tdElement === null) return;
+            let currRow = tdElement.parentElement;
+            const compName = currRow.getElementsByClassName('tdComp')[0].textContent;
+            const posName = currRow.getElementsByClassName('tdPos')[0].textContent;
+            const updateData = {
+                company : compName,
+                position : posName,
+                status : tdElement.textContent,
+                time : getCurrTime()
+            }
+            postData(url="{{ url_for('update') }}", data=updateData)
+                .then((data) => alert(data['message']));
+        });
+    </script>
 {% endblock %}
