@@ -5,7 +5,7 @@ function handler_stop_prop(event) {
 function getCurrTime() {
     function twoDigits(num) {return (num < 10 ? '0' : '') + num.toString();}
     const now = new Date();
-    return (now.getFullYear() + '-' + twoDigits(now.getMonth() + 1) + '-' + twoDigits(now.getDay()) +
+    return (now.getFullYear() + '-' + twoDigits(now.getMonth() + 1) + '-' + twoDigits(now.getDate()) +
         'T' + now.getHours() + ':' + now.getMinutes());
 }
 
@@ -20,16 +20,38 @@ async function postData(url = '', data = {}) {
     return response.json();
   }
 
-function revertTd(className) {
-    // Turn a editted td element back to a normal text-only one
+function getEditingTd(className) {
     let tdElement = document.body.getElementsByClassName(className);
     tdElement = Array.from(tdElement);
     tdElement = tdElement.filter(element => element.childElementCount > 0);
     if(tdElement.length === 0) return null;
     tdElement = tdElement[0];
+    return tdElement; 
+}
+
+function updateTd(className) {
+    let tdElement = getEditingTd(className);
+    if(tdElement === null) return null;
+    let inputs = tdElement.getElementsByClassName('update');
+    let updateData = {};
+    inputs = Array.from(inputs);
+    inputs.forEach((element) => {
+        updateData[element.getAttribute('name')] = element.value;
+    });
     let newValue = tdElement.firstElementChild.value;
     tdElement.innerHTML = newValue;
     if(tdElement.getAttribute('data-prev') === newValue) return null;
+    postData(get_url_update(), updateData)
+        .then((data) => alert(data['message']));
+    return tdElement;
+}
+
+function revertTd(className) {
+    // Turn a editing td element back to a normal text-only one
+    let tdElement = getEditingTd(className);
+    if(tdElement === null) return null;
+    const prevValue = tdElement.getAttribute('data-prev');
+    tdElement.innerHTML = prevValue;
     return tdElement;
 }
 
@@ -56,16 +78,26 @@ $(document).ready(function(){
         element.addEventListener('dblclick', (event) => {
             event.stopPropagation();
             if(childElementSum(tdStatus) === 1) return;
-            if(element.textContent === 'None') return;
+            // if(element.textContent === 'None') return;
             if(element.childElementCount === 0) {
-                let selectBox = document.getElementsByClassName('div-update-status')[0].cloneNode(true);
+                let updateDiv = document.getElementsByClassName('div-update-status')[0].cloneNode(true);
+                let selectBox = updateDiv.getElementsByTagName('select')[0];
                 let curr_val = element.textContent;
                 element.setAttribute('data-prev', curr_val);
                 let opts = selectBox.getElementsByTagName('option');
                 opts = Array.from(opts);
-                selected = opts.filter((element) => element.getAttribute('value') === curr_val)[0];
-                selected.setAttribute('selected', 'selected');
-                element.innerHTML = selectBox.innerHTML;
+                selected = opts.filter((element) => element.getAttribute('value') === curr_val);
+                if(selected.length === 1){
+                    selected = selected[0];
+                    selected.setAttribute('selected', 'selected');                    
+                }
+                let currRow = element.parentElement;
+                const compName = currRow.getElementsByClassName('tdComp')[0].textContent;
+                updateDiv.getElementsByClassName('update-company-auto')[0].setAttribute('value', compName);
+                const posName = currRow.getElementsByClassName('tdPos')[0].textContent;
+                updateDiv.getElementsByClassName('update-position-auto')[0].setAttribute('value', posName);
+                element.innerHTML = updateDiv.innerHTML;
+                element.getElementsByClassName('update-time')[0].value = getCurrTime();
             }
         });
     });
