@@ -26,9 +26,14 @@ def homepage():
         db.row_factory = sqlite3.Row
 
         cur = db.cursor()
-        cur.execute("select * from job_info")
-
+        cur.execute("SELECT * FROM job_info")
         rows = cur.fetchall()
+        for i, row in enumerate(rows):
+            update_id = row["last_status_update"]
+            cur.execute("SELECT app_status, update_time, action_deadline FROM app_status_log WHERE update_id=(?)", (update_id,))
+            status_info = cur.fetchone()
+            keys, vals = row.keys() + status_info.keys(), list(row) + list(status_info)
+            rows[i] = {k: v for k, v in zip(keys, vals)}
         rows = reversed(rows)
     return render_template("home.html", rows=rows)
 

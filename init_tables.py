@@ -7,5 +7,5 @@ def init_db(db):
     db.close()
 
 if __name__ == "__main__":
-    con = sqlite3.connect("app_data.sqlite")
+    con = sqlite3.connect("test_app_data.sqlite")
     init_db(con)

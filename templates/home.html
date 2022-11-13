@@ -18,24 +18,28 @@
             <th scope="col">Company</th>
             <th scope="col">Position/Program</th>
             <th scope="col">Hiring Status</th>
-            <th scope="col">Deadline</th>
+            <th scope="col">Application Deadline</th>
             <th scope="col">Company Type</th>
             <th scope="col">Priority</th>
             <th scope="col">Application Portal</th>
             <th scope="col">Status</th>
+            <th scope="col">Update Time</th>
+            <th scope="col">Action Deadline</th>
             <th scope="col">Comment</th>
         </thead>
         {% for row in rows %}
         <tr>
             <td class="tdComp">{{row["company"]}}</td>
-            <td class="tdPos"><a href="{{ row['weblink'] }}" target="_blank">{{row["position"]}}</a></td>
-            <td>{{row["posting_status"]}}</td>
-            <td>{{row["deadline"]}}</td>
-            <td>{{row["company_type"]}}</td>
-            <td>{{row["app_priority"]}}</td>
-            <td>{% if row['app_portal'] %}<a href="{{row['app_portal']}}" target="_blank">Link</a>{% endif %}</td>
-            <td class="tdStatus">{{row["app_status"]}}</td>
-            <td class="tdNote">{{row['note']}}</td>	
+            <td class="tdPos"><a href="{{ row['pos_link'] }}" target="_blank">{{row["position"]}}</a></td>
+            <td class="td-editable">{{row["posting_status"]}}</td>
+            <td class="td-editable">{{row["deadline"]}}</td>
+            <td class="td-editable">{{row["company_type"]}}</td>
+            <td class="td-editable">{{row["app_priority"]}}</td>
+            <td class="td-editable">{% if row['app_portal'] %}<a href="{{ row['app_portal'] }}" target="_blank">Link</a>{% endif %}</td>
+            <td class="td-editable tdStatus">{{row["app_status"]}}</td>
+            <td class="td-editable">{{row["update_time"]}}</td>
+            <td class="td-editable">{{row["action_deadline"]}}</td>
+            <td class="td-editable tdNote">{{row['note']}}</td>	
         </tr>
         {% endfor %}
     </table>
@@ -61,6 +65,15 @@
 
     <div class="hidden div-update-note" hidden>
         <textarea class="form-control update update-note" name = "note" aria-label="update-note"></textarea>
+    </div>
+
+    <div class="hidden" id="div-edit-button" hidden>
+        <button type="button" class="btn btn-secondary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+            </svg>
+        </button>
     </div>
 
     <script>

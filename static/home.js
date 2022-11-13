@@ -62,11 +62,44 @@ function childElementSum(nodeList) {
     ).reduce((a,b) => a + b, 0);
 }
 
+function addEditableEvent() {
+    let editButton = document.createElement("button");
+    editButton.setAttribute("type", "button");
+    editButton.setAttribute("class", "bt bt-outline-second");
+    let icon = document.createElement("i");
+    icon.setAttribute("class", "bi bi-pencil-square");
+    editButton.appendChild(icon);
+    let tdEditable = document.body.getElementsByClassName('td-editable');
+    tdEditable = Array.from(tdEditable);
+    tdEditable.forEach((element) => {
+        element.addEventListener('onmouseover', () => {
+            element.appendChild(editButton);
+        });
+        element.addEventListener('onmouseout', () => {
+            element.removeChild(editButton);
+        })
+    })
+}
+
 $(document).ready(function(){
     $(document).click(function(){
         let text_box = $('.tdNote').find('textarea');
         let td_to_revert = text_box.parent();
         td_to_revert.html(text_box.val());
+    })
+
+    let editButton = document.getElementById("div-edit-button").children[0].cloneNode(true);
+    let tdEditable = document.body.getElementsByClassName('td-editable');
+    tdEditable = Array.from(tdEditable);
+    tdEditable.forEach((element) => {
+        element.addEventListener('mouseover', () => {
+            console.log("over");
+            element.appendChild(editButton);
+        });
+        element.addEventListener('mouseleave', () => {
+            console.log("out");
+            element.removeChild(editButton);
+        })
     })
 
     let tdStatus = document.body.getElementsByClassName('tdStatus');
