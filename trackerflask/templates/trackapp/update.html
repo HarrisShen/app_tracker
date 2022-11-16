@@ -1,19 +1,19 @@
 {% extends 'base.html' %}
 
-{% block title%}Application Tracker - New Position{% endblock %}
+{% block title%}Update{% endblock %}
 
 {% block content%}
-    <h3>Job Application Update</h3>
-    <form action="{{ url_for('addrec') }}" method="POST">
+    <h3>Update Job Application</h3>
+    <form method="POST">
         <div class="container mt-3">
             <div class="row g-2 mt-3">
                 <div class="col">
                     <label for="company" class="form-label">Company *</label>
-                    <input type="text" class="form-control" id="company" name="company" required/>
+                    <input type="text" class="form-control" id="company" name="company" value="{{ pos_info['company'] }}" readonly/>
                 </div>
                 <div class="col">
                     <label for="position" class="form-label">Position/Program *</label>
-                    <input type="text" class="form-control" id="position" name = "position" required></input>                  
+                    <input type="text" class="form-control" id="position" name = "position" value="{{ pos_info['position'] }}" readonly></input>                  
                 </div> 
             </div>            
             <a id="moreInfoButton" data-bs-toggle="collapse" href="#newEntryDropdown" role="button" aria-expanded="false" aria-controls="newEntryDropdown">More details</a>          
@@ -21,29 +21,29 @@
 
         <div class="collapse container mt-3" name="new_entry_dropdown" id="newEntryDropdown">
             <label for="link" class="form-label">Link</label>
-            <textarea class="form-control" name="link" id="link"></textarea>
+            <textarea class="form-control" name="link" id="link">{{ pos_info['pos_link'] }}</textarea>
 
             <div class="row g-2">
                 <div class="col">
                     <label for="posting_status" class="form-label">Hiring Status</label>
-                    <select class="form-select" name="posting_status" id="posting_status">
+                    <select class="form-select" name="posting_status" id="posting_status" origvalue="{{ pos_info['posting_status'] }}">
                         <option value="Open">Open</option>
                         <option value="Closed">Closed</option>
                     </select>
                 </div>
                 <div class="col">
                     <label for="app_deadline" class="form-label">Application Deadline</label>
-                    <input class="form-control" type="date" name="app_deadline" id="app_deadline"/>                    
+                    <input class="form-control" type="date" name="app_deadline" id="app_deadline" value="{{ pos_info['deadline'] }}"/>                    
                 </div>
             </div>
             <div class="row g-2">
                 <div class="col">
                     <label for="company_type" class="form-label">Company Type</label>
-                    <input class="form-control" type="text" name="company_type" id="company_type"/>                    
+                    <input class="form-control" type="text" name="company_type" id="company_type" value="{{ pos_info['company_type'] }}"/>                    
                 </div>
                 <div class="col">
                     <label for="priority" class="form-label">Priority</label>
-                    <select class="form-select" name="priority" id="priority">
+                    <select class="form-select" name="priority" id="priority" origvalue="{{ pos_info['app_priority'] }}">
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -51,14 +51,14 @@
                 </div>
             </div>
             <label for="app_portal" class="form-label">Application Portal</label>
-            <textarea class="form-control" name="app_portal" id="app_portal"></textarea>
+            <textarea class="form-control" name="app_portal" id="app_portal">{{ pos_info['app_portal'] }}</textarea>
         </div>
 
         <div class="container mt-3">
             <div class="row g-2 mt-3">
                 <div class="col">
                     <label for="status" class="form-label">Application Status</label>
-                    <select class="form-select" name="status" id="status">
+                    <select class="form-select" name="status" id="status" origvalue="{{ pos_info['app_status'] }}">
                         <option value="None"></option>
                         <option value="Ready">1-Ready</option>
                         <option value="Ongoing">2-Ongoing</option>
@@ -75,20 +75,24 @@
             </div>
             <div>
                 <label for="note" class="form-label">Comment</label>
-                <textarea class="form-control" name = "note"></textarea>                
+                <textarea class="form-control" name = "note">{{ pos_info['note'] }}</textarea>                
             </div>
         </div>
 
         <div class="container mt-3">
             <input class="btn btn-primary" type="submit" value="Submit" />
-            <a class="btn btn-secondary" href="/">Back</a>
+            <a class="btn btn-secondary" href="{{ url_for('trackapp.index') }}">Back</a>
         </div>            
     </form>
+    <script src="{{ url_for('static', filename='update.js') }}"></script>
     <script>
-        $('#moreInfoButton').click(function(){
-            $(this).text(function(i, old){
-                return old == "More details" ? "Less details" : "More details";
-            })
+        let moreInfoButton = document.getElementById("moreInfoButton")
+        moreInfoButton.addEventListener("click", () => {
+            let old = moreInfoButton.text;
+            moreInfoButton.text = old == "More details" ? "Less details" : "More details"
         })
+        let selectElements = document.getElementsByTagName("select");
+        selectElements = Array.from(selectElements)
+        selectElements.forEach((element) => setSelectDefault(element, element.getAttribute("origvalue")))
     </script>    
 {% endblock %}
