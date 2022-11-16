@@ -12,3 +12,6 @@ htmlcov/
 dist/
 build/
 *.egg-info/
+deprecated/addnew.html
+deprecated/home.html
+deprecated/result.html

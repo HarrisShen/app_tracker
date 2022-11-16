@@ -21,7 +21,7 @@ def index():
     cur.execute(
         "SELECT * FROM job_info LEFT JOIN app_status_log "
         "ON job_info.last_status_update = app_status_log.update_id "
-        "WHERE user_id=(?)", (user_id,))
+        "WHERE user_id=(?) ORDER BY update_time", (user_id,))
     rows = cur.fetchall()
     rows = reversed(rows)
     return render_template('trackapp/index.html', rows=rows, user_id=user_id)

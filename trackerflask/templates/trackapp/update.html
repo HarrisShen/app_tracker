@@ -55,7 +55,7 @@
         </div>
 
         <div class="container mt-3">
-            <div class="row g-2 mt-3">
+            <div class="row g-3 mt-3">
                 <div class="col">
                     <label for="status" class="form-label">Application Status</label>
                     <select class="form-select" name="status" id="status" origvalue="{{ pos_info['app_status'] }}">
@@ -71,6 +71,10 @@
                 <div class="col">
                     <label for="time" class="form-label">Update Time</label><br>
                     <input class="form-control" type="datetime-local" name="time"/><br>                    
+                </div>
+                <div class="col">
+                    <label for="action_deadline" class="form-label">Action Deadline</label><br>
+                    <input class="form-control" type="datetime-local" name="action_deadline"/><br>                    
                 </div>
             </div>
             <div>
