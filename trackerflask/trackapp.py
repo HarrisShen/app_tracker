@@ -1,4 +1,5 @@
 import json
+import math
 import time
 from flask import (
     Blueprint, session, current_app, flash, g, redirect, render_template, request, url_for
@@ -11,8 +12,15 @@ from trackerflask.db import get_db
 bp = Blueprint('trackapp', __name__)
 
 
+def get_page_index(page_num, each_page=20):
+    start = (page_num - 1) * each_page
+    end = page_num * each_page
+    return start, end
+
 @bp.route('/')
 def index():
+    page_num = request.args.get("page", default=1, type=int)
+    each_page = 20
     user_id = session.get('user_id')
     if user_id is None:
         return redirect(url_for('auth.login'))
@@ -23,8 +31,15 @@ def index():
         "ON job_info.last_status_update = app_status_log.update_id "
         "WHERE user_id=(?) ORDER BY update_time", (user_id,))
     rows = cur.fetchall()
-    rows = reversed(rows)
-    return render_template('trackapp/index.html', rows=rows, user_id=user_id)
+    rows = list(reversed(rows))
+    n_rows = len(rows)
+    maxpage = math.ceil(n_rows / each_page)
+    start, end = get_page_index(page_num, each_page=each_page)
+    rows = rows[start: end]
+    page_info = f"{start + 1}-{min(end, n_rows)} in {n_rows} entries"
+    return render_template(
+        'trackapp/index.html', rows=rows, user_id=user_id, 
+        currpage=page_num, maxpage=maxpage, pageinfo=page_info)
 
 def get_form_values(form_dict, keys):
     return tuple(form_dict.get(k) for k in keys)
