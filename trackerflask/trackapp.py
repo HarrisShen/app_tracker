@@ -2,7 +2,7 @@ import json
 import math
 import time
 from flask import (
-    Blueprint, session, current_app, flash, g, redirect, render_template, request, url_for
+    Blueprint, session, current_app, flash, g, redirect, render_template, request, url_for, jsonify
 )
 from werkzeug.exceptions import abort
 
@@ -19,6 +19,7 @@ def get_page_index(page_num, each_page=20):
 
 @bp.route('/')
 def index():
+    query = request.args.get("query", type=str)
     page_num = request.args.get("page", default=1, type=int)
     each_page = 20
     user_id = session.get('user_id')
@@ -26,17 +27,25 @@ def index():
         return redirect(url_for('auth.login'))
     db = get_db()
     cur = db.cursor()
-    cur.execute(
-        "SELECT * FROM job_info LEFT JOIN app_status_log "
-        "ON job_info.last_status_update = app_status_log.update_id "
-        "WHERE user_id=(?) ORDER BY update_time", (user_id,))
+    if query is None:
+        cur.execute(
+            "SELECT * FROM job_info LEFT JOIN app_status_log "
+            "ON job_info.last_status_update = app_status_log.update_id "
+            " WHERE user_id = ? ORDER BY update_time", (user_id,))
+    else:
+        cur.execute(
+            "SELECT * FROM job_info LEFT JOIN app_status_log "
+            "ON job_info.last_status_update = app_status_log.update_id "
+            "WHERE (user_id = ?) AND (company LIKE ?) ORDER BY update_time",
+            (user_id, f"%{query}%"))
     rows = cur.fetchall()
     rows = list(reversed(rows))
     n_rows = len(rows)
     maxpage = math.ceil(n_rows / each_page)
     start, end = get_page_index(page_num, each_page=each_page)
     rows = rows[start: end]
-    page_info = f"{start + 1}-{min(end, n_rows)} in {n_rows} entries"
+    query_info = "" if query is None else f'Search for "{query}", '
+    page_info = f"{query_info}{min(start + 1, n_rows)}-{min(end, n_rows)} in {n_rows} entries"
     return render_template(
         'trackapp/index.html', rows=rows, user_id=user_id, 
         currpage=page_num, maxpage=maxpage, pageinfo=page_info)
@@ -190,3 +199,29 @@ def delete(pid):
         cur.execute('DELETE FROM change_log WHERE pos_id = ?', (pid,))
         db.commit()
     return redirect(url_for('trackapp.index'))
+
+@bp.route('/search', methods=('POST',))
+@login_required
+def search():
+    query_text = request.get_json()["text"]
+    print(request.get_json())
+    with current_app.app_context():
+        db = get_db()
+        cur = db.cursor()
+        cur.execute('SELECT company FROM job_info WHERE company LIKE ?', (f"{query_text}%",))
+        res = cur.fetchall()
+    return jsonify([s[0] for s in res])
+
+def get_app_history(pid):
+    db = get_db()
+    cur = db.cursor()
+    cur.execute("SELECT * FROM app_status_log WHERE pos_id=(?)", (pid,))
+    app_history = cur.fetchall()
+    return app_history
+
+@bp.route("/<int:pid>/details")
+@login_required
+def details(pid):
+    pos_info = get_pos_info(pid)
+    app_history = get_app_history(pid)
+    return render_template('trackapp/details.html', pos_info=pos_info, history=app_history)

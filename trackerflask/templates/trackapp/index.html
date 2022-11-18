@@ -9,39 +9,44 @@
 
     <div class="container mt-3">
         <div class="d-flex">
+            <form method="GET">
+                <div class="input-group mb-3">
+                    <input id="search-box" name="query" type="text" class="form-control" target="{{ url_for('trackapp.search') }}"/>
+                    <button class="btn btn-outline-secondary" type="submit">Search</button>                 
+                </div>                
+            </form>
+
             <div class="d-flex me-auto align-items-center">
-                <div class="d-flex align-items-center">
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination">
-                            {% if currpage > 1 %}
-                            <li class="page-item">
-                                <a class="page-link" href="{{ url_for('trackapp.index', page=currpage - 1) }}" aria-label="Previous">
-                                    <span aria-hidden="true">&laquo;</span>
-                                </a>
-                            </li>
-                            {% else %}
-                            <li class="page-item disabled">
-                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
-                                    <span aria-hidden="true">&laquo;</span>
-                                </a>
-                            </li>
-                            {% endif %}
-                            {% if currpage < maxpage %}
-                            <li class="page-item">
-                                <a class="page-link" href="{{ url_for('trackapp.index', page=currpage + 1) }}" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                </a>
-                            </li>
-                            {% else %}
-                            <li class="page-item disabled">
-                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
-                                    <span aria-hidden="true">&raquo;</span>
-                                </a>
-                            </li>
-                            {% endif %}
-                        </ul>
-                    </nav>                    
-                </div>
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        {% if currpage > 1 %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('trackapp.index', page=currpage - 1) }}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                        {% if currpage < maxpage %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('trackapp.index', page=currpage + 1) }}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
 
                 <span class="ms-2">{{pageinfo}}</span>
             </div>
@@ -62,6 +67,7 @@
                 <th>Update Time</th>
                 <th>Action Deadline</th>
                 <th>Comment</th>
+                <th>Details</th>
                 <th>Update</th>
                 <th>Delete</th>
             </thead>
@@ -78,6 +84,7 @@
                 <td class="td-editable">{{row["update_time"]}}</td>
                 <td class="td-editable">{{row["action_deadline"]}}</td>
                 <td class="td-editable tdNote">{{row['note']}}</td>
+                <td><a class="btn btn-secondary" href="{{ url_for('trackapp.details', pid=row['pos_id']) }}">...</a></td>
                 <td><a class="btn btn-secondary" href="{{ url_for('trackapp.update', pid=row['pos_id']) }}">...</a></td>
                 <td>
                     <form action="{{ url_for('trackapp.delete', pid=row['pos_id']) }}" method="post">

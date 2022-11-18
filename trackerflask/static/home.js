@@ -94,12 +94,6 @@ function clearEditBtn(){
 }
 
 $(document).ready(function(){
-    // $(document).click(function(){
-    //     let text_box = $('.tdNote').find('textarea');
-    //     let td_to_revert = text_box.parent();
-    //     td_to_revert.html(text_box.val());
-    // })
-
     document.addEventListener('click', () => {
         clearEditBtn();
     });
@@ -117,50 +111,14 @@ $(document).ready(function(){
         });
     })
 
-    // let tdStatus = document.body.getElementsByClassName('tdStatus');
-    // tdStatus = Array.from(tdStatus);
-    // tdStatus.forEach((element) => {
-    //     element.addEventListener('click', handler_stop_prop);
-    // });
-    // tdStatus.forEach((element) => {
-    //     element.addEventListener('dblclick', (event) => {
-    //         event.stopPropagation();
-    //         if(childElementSum(tdStatus) === 1) return;
-    //         // if(element.textContent === 'None') return;
-    //         if(element.childElementCount === 0) {
-    //             let updateDiv = document.getElementsByClassName('div-update-status')[0].cloneNode(true);
-    //             let selectBox = updateDiv.getElementsByTagName('select')[0];
-    //             let curr_val = element.textContent;
-    //             element.setAttribute('data-prev', curr_val);
-    //             let opts = selectBox.getElementsByTagName('option');
-    //             opts = Array.from(opts);
-    //             selected = opts.filter((element) => element.getAttribute('value') === curr_val);
-    //             if(selected.length === 1){
-    //                 selected = selected[0];
-    //                 selected.setAttribute('selected', 'selected');                    
-    //             }
-    //             let currRow = element.parentElement;
-    //             const compName = currRow.getElementsByClassName('tdComp')[0].textContent;
-    //             updateDiv.getElementsByClassName('update-company-auto')[0].setAttribute('value', compName);
-    //             const posName = currRow.getElementsByClassName('tdPos')[0].textContent;
-    //             updateDiv.getElementsByClassName('update-position-auto')[0].setAttribute('value', posName);
-    //             element.innerHTML = updateDiv.innerHTML;
-    //             element.getElementsByClassName('update-time')[0].value = getCurrTime();
-    //         }
-    //     });
-    // });
-
-    // let $tdNote = $('.tdNote');
-    // $tdNote.each(function() {
-    //     $(this).click(handler_stop_prop);
-    // });
-    // $tdNote.dblclick(function(event) {
-    //     event.stopPropagation();
-    //     if($(this).children().length === 0){
-    //         let text_box = $('.div-update-note').clone();
-    //         let curr_val = $(this).text();
-    //         text_box.find("textarea").text(curr_val);
-    //         $(this).html(text_box.html());                
-    //     }
-    // });
+    let searchBox = document.getElementById("search-box");
+    searchBox.addEventListener("change", () => {
+        if(searchBox.value) {
+        postData(searchBox.getAttribute("target"), {text: searchBox.value})
+            .then((data) => {
+                console.log(data);
+                let dropdown = document.createElement("span"); // TODO: dropdown list for search results
+            });
+        }
+    });
 });
