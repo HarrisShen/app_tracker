@@ -6,6 +6,7 @@
 
 {% block content%}
     <script src="{{ url_for('static', filename='home.js') }}"></script>
+    <script src="{{ url_for('static', filename='utils.js') }}"></script>
 
     <div class="container mt-3">
         <div class="d-flex">
@@ -48,7 +49,7 @@
                     </ul>
                 </nav>
 
-                <span class="ms-2">{{pageinfo}}</span>
+                <span class="ms-2">{{pageinfo}}: {{status_stats}}</span>
             </div>
             <div class="ms-auto">
                 <a class="btn btn-primary me-auto" href="{{ url_for('trackapp.create') }}">Add record</a>

@@ -1,3 +1,4 @@
+from collections import Counter
 import json
 import math
 import time
@@ -41,14 +42,20 @@ def index():
     rows = cur.fetchall()
     rows = list(reversed(rows))
     n_rows = len(rows)
+    status_stats = Counter([row["app_status"] for row in rows])
+    status_stats = (
+        f'Ready - {status_stats["Ready"]}, Ongoing - {status_stats["Ongoing"]}, '
+        f'Submitted - {status_stats["Submitted"]}, Interview - {status_stats["Interview"]} '
+        f'Rejected - {status_stats["Rejected"]}, Offer - {status_stats["Offer"]}'
+    )
     maxpage = math.ceil(n_rows / each_page)
     start, end = get_page_index(page_num, each_page=each_page)
     rows = rows[start: end]
     query_info = "" if query is None else f'Search for "{query}", '
     page_info = f"{query_info}{min(start + 1, n_rows)}-{min(end, n_rows)} in {n_rows} entries"
     return render_template(
-        'trackapp/index.html', rows=rows, user_id=user_id, 
-        currpage=page_num, maxpage=maxpage, pageinfo=page_info)
+        'trackapp/index.html', rows=rows, user_id=user_id, currpage=page_num, maxpage=maxpage, 
+        pageinfo=page_info, status_stats=status_stats)
 
 def get_form_values(form_dict, keys):
     return tuple(form_dict.get(k) for k in keys)
@@ -84,13 +91,13 @@ def create():
                     "priority", "app_portal", "note"
                 )
                 cur.execute(insert_job_entry, get_form_values(form_info, param_keys))
+                param_keys = ("user_id", "company", "position")
+                cur.execute(
+                    "SELECT pos_id FROM job_info WHERE user_id=(?) AND company=(?) AND position=(?)",
+                    get_form_values(form_info, param_keys)
+                )
+                form_info["pos_id"] = cur.fetchone()["pos_id"]
                 if form_info["status"] != "None":
-                    param_keys = ("user_id", "company", "position")
-                    cur.execute(
-                        "SELECT pos_id FROM job_info WHERE user_id=(?) AND company=(?) AND position=(?)",
-                        get_form_values(form_info, param_keys)
-                    )
-                    form_info["pos_id"] = cur.fetchone()["pos_id"]
                     param_keys = ("pos_id", "status", "time", "app_deadline")
                     cur.execute(insert_app_log, get_form_values(form_info, param_keys))
                     cur.execute(

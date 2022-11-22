@@ -3,6 +3,8 @@
 {% block title%}New Application{% endblock %}
 
 {% block content%}
+    <script src="{{ url_for('static', filename='utils.js') }}"></script>
+
     <h3>New Job Application</h3>
     <form method="POST">
         <div class="container mt-3">
@@ -69,8 +71,16 @@
                     </select>                    
                 </div>
                 <div class="col">
-                    <label for="time" class="form-label">Update Time</label><br>
-                    <input class="form-control" type="datetime-local" name="time"/><br>                    
+                    <div class="d-flex">
+                        <label for="time" class="form-label">Update Time</label><br>
+                        <div class="form-check ms-2">
+                            <input class="form-check-input" type="checkbox" value="" id="checkCurrTime">
+                            <label class="form-check-label" for="checkCurrTime">
+                                Use current time
+                            </label>
+                        </div>       
+                    </div>
+                    <input class="form-control" type="datetime-local" name="time" id="update-time"/><br>                    
                 </div>
             </div>
             <div>
@@ -85,10 +95,15 @@
         </div>            
     </form>
     <script>
-        $('#moreInfoButton').click(function(){
-            $(this).text(function(i, old){
-                return old == "More details" ? "Less details" : "More details";
-            })
-        })
-    </script>    
+        let btnExp = document.getElementById("moreInfoButton");
+        btnExp.addEventListener("click", () => {
+            btnExp.text = btnExp.text === "More details" ? "Less details" : "More details";
+        });
+        let checkCurrTime = document.getElementById("checkCurrTime");
+        let inputTime = document.getElementById("update-time");
+        checkCurrTime.addEventListener("click", () => {
+            inputTime.disabled = checkCurrTime.checked;
+            inputTime.value = checkCurrTime.checked ? getCurrTime() : "";
+        });
+    </script>
 {% endblock %}
