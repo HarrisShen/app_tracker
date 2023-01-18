@@ -102,7 +102,7 @@
         let checkCurrTime = document.getElementById("checkCurrTime");
         let inputTime = document.getElementById("update-time");
         checkCurrTime.addEventListener("click", () => {
-            inputTime.disabled = checkCurrTime.checked;
+            inputTime.readonly = checkCurrTime.checked;
             inputTime.value = checkCurrTime.checked ? getCurrTime() : "";
         });
     </script>

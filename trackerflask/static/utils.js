@@ -2,7 +2,7 @@ function getCurrTime() {
     function twoDigits(num) {return (num < 10 ? '0' : '') + num.toString();}
     const now = new Date();
     return (now.getFullYear() + '-' + twoDigits(now.getMonth() + 1) + '-' + twoDigits(now.getDate()) +
-        'T' + now.getHours() + ':' + now.getMinutes());
+        'T' + twoDigits(now.getHours()) + ':' + twoDigits(now.getMinutes()));
 }
 
 async function postData(url = '', data = {}) {

@@ -13,3 +13,10 @@ dist/
 build/
 *.egg-info/
 deprecated/
+config/
+
+.DS_Store
+.idea
+.ipynb_checkpoints
+
+TODO
