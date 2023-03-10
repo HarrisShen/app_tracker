@@ -1,4 +1,7 @@
-#new_entry_dropdown
-{
+#new_entry_dropdown {
     display: none;
+}
+
+.login-box {
+    max-width: 300px;
 }
