@@ -3,7 +3,7 @@
 {% block title%}Update{% endblock %}
 
 {% block content%}
-    <h3>Update Job Application</h3>
+    <h3>Update Application</h3>
     <form method="POST">
         <div class="container mt-3">
             <div class="row g-2 mt-3">
@@ -70,7 +70,7 @@
                 </div>
                 <div class="col">
                     <label for="time" class="form-label">Update Time</label><br>
-                    <input class="form-control" type="datetime-local" name="time"/><br>                    
+                    <input class="form-control" type="datetime-local" name="time" id="update-time"/><br>                    
                 </div>
                 <div class="col">
                     <label for="action_deadline" class="form-label">Action Deadline</label><br>
@@ -88,15 +88,19 @@
             <a class="btn btn-secondary" href="{{ url_for('trackapp.index') }}">Back</a>
         </div>            
     </form>
+    <script src="{{ url_for('static', filename='utils.js') }}"></script>
     <script src="{{ url_for('static', filename='update.js') }}"></script>
     <script>
-        let moreInfoButton = document.getElementById("moreInfoButton")
+        let moreInfoButton = document.getElementById("moreInfoButton");
         moreInfoButton.addEventListener("click", () => {
             let old = moreInfoButton.text;
             moreInfoButton.text = old == "More details" ? "Less details" : "More details"
-        })
+        });
         let selectElements = document.getElementsByTagName("select");
-        selectElements = Array.from(selectElements)
-        selectElements.forEach((element) => setSelectDefault(element, element.getAttribute("origvalue")))
+        selectElements = Array.from(selectElements);
+        selectElements.forEach((element) => setSelectDefault(element, element.getAttribute("origvalue")));
+
+        let timeInput = document.getElementById("update-time");
+        timeInput.value = getCurrTime();
     </script>    
 {% endblock %}
