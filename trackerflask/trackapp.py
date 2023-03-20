@@ -2,6 +2,10 @@ from collections import Counter
 import json
 import math
 import time
+import os
+
+import requests
+import openai
 from flask import (
     Blueprint, session, current_app, flash, g, redirect, render_template, request, url_for, jsonify
 )
@@ -9,9 +13,10 @@ from werkzeug.exceptions import abort
 
 from trackerflask.auth import login_required
 from trackerflask.db import get_db
+from trackerflask.gpt import GPT
 
 bp = Blueprint('trackapp', __name__)
-
+gptAPI = GPT(os.environ.get('APIKEY'))
 
 def get_page_index(page_num, each_page=20):
     start = (page_num - 1) * each_page
@@ -232,3 +237,10 @@ def details(pid):
     pos_info = get_pos_info(pid)
     app_history = get_app_history(pid)
     return render_template('trackapp/details.html', pos_info=pos_info, history=app_history)
+
+@bp.route("/gpt_parse", method=["POST"])
+def gpt_parse():
+    url = request.get_json()["url"]
+    r = requests.get(url)
+    response = gptAPI.getResponse(r.text)
+    return response
