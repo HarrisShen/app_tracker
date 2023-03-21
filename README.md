@@ -1,7 +1,6 @@
-# app_tracker: An Flask app for tracking job applications
+# AppTracker: An Flask app for tracking job applications
 
-## Function
-This web app provides a website with which user can manage their job application history. The history entries of applications can be created, updated and deleted. The key information for a entry, like company name, position title and weblink of the posting are needed upon creation. Once the status of the job application changes, the entry can be updated on the webpage, reflecting the up-to-date status.
+This Flask app provides a website where user can manage their job application history. The history entries of applications can be created, updated and deleted. The key information for a entry, like company name, position title and weblink of the posting are needed upon creation. Once the status of the job application changes, the entry can be updated on the webpage, reflecting the up-to-date status.
 
 ## Current version
 0.5.0
