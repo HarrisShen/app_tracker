@@ -42,15 +42,18 @@ def index():
     rows = cur.fetchall()
     rows = list(reversed(rows))
     n_rows = len(rows)
+
     status_stats = Counter([row["app_status"] for row in rows])
     status_stats = (
         f'Ready - {status_stats["Ready"]}, Ongoing - {status_stats["Ongoing"]}, '
         f'Submitted - {status_stats["Submitted"]}, Interview - {status_stats["Interview"]} '
         f'Rejected - {status_stats["Rejected"]}, Offer - {status_stats["Offer"]}'
     )
+
     maxpage = math.ceil(n_rows / each_page)
     start, end = get_page_index(page_num, each_page=each_page)
     rows = rows[start: end]
+
     query_info = "" if query is None else f'Search for "{query}", '
     page_info = f"{query_info}{min(start + 1, n_rows)}-{min(end, n_rows)} in {n_rows} entries"
     return render_template(

@@ -66,7 +66,7 @@
                 <th>Priority</th>
                 <th>Application Portal</th>
                 <th>Status</th>
-                <th>Update Time</th>
+                <th>Last Update</th>
                 <th>Action Deadline</th>
                 <th>Comment</th>
                 <th>Details</th>
@@ -83,7 +83,7 @@
                 <td class="td-editable">{{row["app_priority"]}}</td>
                 <td class="td-editable">{% if row['app_portal'] %}<a href="{{ row['app_portal'] }}" target="_blank">Link</a>{% endif %}</td>
                 <td class="td-editable tdStatus">{{row["app_status"]}}</td>
-                <td class="td-editable">{{row["update_time"]}}</td>
+                <td class="td-editable tdUpdateTime">{{row["update_time"]}}</td>
                 <td class="td-editable">{{row["action_deadline"]}}</td>
                 <td class="td-editable tdNote">{{row['note']}}</td>
                 <td><a class="btn btn-secondary" href="{{ url_for('trackapp.details', pid=row['pos_id']) }}">...</a></td>

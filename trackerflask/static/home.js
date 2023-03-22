@@ -103,4 +103,14 @@ $(document).ready(function(){
             });
         }
     });
+
+    let updateTimeTds = document.getElementsByClassName("tdUpdateTime");
+    updateTimeTds = Array.from(updateTimeTds);
+    updateTimeTds.forEach(element => {
+        console.log(element.textContent);
+        tdiff = getTimeDiff(new Date(element.textContent));
+        if (isNaN(tdiff)) tdiff = "None";
+        else tdiff = timeDiffToString(tdiff);
+        element.textContent = tdiff;
+    });
 });
