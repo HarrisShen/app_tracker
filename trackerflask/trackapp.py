@@ -4,8 +4,8 @@ import math
 import time
 import os
 
+from bs4 import BeautifulSoup
 import requests
-import openai
 from flask import (
     Blueprint, session, current_app, flash, g, redirect, render_template, request, url_for, jsonify
 )
@@ -238,9 +238,18 @@ def details(pid):
     app_history = get_app_history(pid)
     return render_template('trackapp/details.html', pos_info=pos_info, history=app_history)
 
-@bp.route("/gpt_parse", method=["POST"])
+@bp.route("/gpt-parse", methods=["POST"])
 def gpt_parse():
     url = request.get_json()["url"]
     r = requests.get(url)
-    response = gptAPI.getResponse(r.text)
-    return response
+    soup = BeautifulSoup(r.text, "html.parser")
+    text = soup.body
+    # text = soup.select('script[type="application/ld+json"]')[0].text.strip()
+    prompt = f'''
+        This is a job posting from "{url}", please parse the following information: company name, 
+        job(position/program) title, job description, job requirements, job location, job type, 
+        shool year requirement, visa/sponsorship requirement, application deadline. Response in JSON format.
+        Here is the body string of the job web page:
+        {text}'''
+    response = gptAPI.getResponse(prompt=prompt)
+    return jsonify(json.load(response))

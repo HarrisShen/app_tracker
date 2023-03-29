@@ -105,5 +105,14 @@
             inputTime.readonly = checkCurrTime.checked;
             inputTime.value = checkCurrTime.checked ? getCurrTime() : "";
         });
+
+        let inputLink = document.getElementById("link");
+        inputLink.addEventListener("input", async () => {
+            console.log(inputLink.value);
+            postData("{{ url_for('trackapp.gpt_parse') }}", {url: inputLink.value.trim()})
+                .then(data => {
+                    console.log(data);
+                });
+        });
     </script>
 {% endblock %}
