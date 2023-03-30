@@ -20,3 +20,5 @@ config/
 .ipynb_checkpoints
 
 TODO
+
+secret*

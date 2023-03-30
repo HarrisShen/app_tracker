@@ -95,6 +95,13 @@
         </div>            
     </form>
     <script>
+        function autofillForm(data) {
+            let inputCompany = document.getElementById("company");
+            let inputPosition = document.getElementById("position");
+            inputCompany.value = data.company;
+            inputPosition.value = data.title;
+        }      
+
         let btnExp = document.getElementById("moreInfoButton");
         btnExp.addEventListener("click", () => {
             btnExp.text = btnExp.text === "More details" ? "Less details" : "More details";
@@ -104,6 +111,17 @@
         checkCurrTime.addEventListener("click", () => {
             inputTime.readonly = checkCurrTime.checked;
             inputTime.value = checkCurrTime.checked ? getCurrTime() : "";
+        });
+
+        let inputLink = document.getElementById("link");
+        inputLink.addEventListener("input", async () => {
+            if (!inputLink.value.trim()) return;
+            postData("{{ url_for('trackapp.gpt_parse') }}", {url: inputLink.value.trim()})
+                .then(data => {
+                    console.log(data);
+                    if (data.error) return;
+                    autofillForm(data);
+                });
         });
     </script>
 {% endblock %}
