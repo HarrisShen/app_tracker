@@ -9,5 +9,6 @@ setup(
         'flask',
         'openai',
         'requests',
+        'beautifulsoup4',
     ],
 )

@@ -18,30 +18,40 @@ On Windows
 % python gpt.py
 '''
 import openai
-
+import tiktoken
 
 class GPT():
     ''' make queries to gpt from a given API '''
 
-    def __init__(self, apikey):
+    def __init__(self, apikey, model_engine="text-davinci-003", temperature=0.5):
         ''' store the apikey in an instance variable '''
         self.apikey = apikey
         # Set up the OpenAI API client
         openai.api_key = apikey
 
         # Set up the model and prompt
-        self.model_engine = "text-davinci-003"
+        self.model_engine = model_engine
 
-    def getResponse(self, prompt):
+        self.temperature = temperature
+
+    def get_response(self, prompt):
         ''' Generate a GPT response '''
-        completion = openai.Completion.create(
-            engine=self.model_engine,
-            prompt=prompt,
-            max_tokens=1024,
-            n=1,
-            stop=None,
-            temperature=0.8,
-        )
-
+        for chunk in self.split_prompt(prompt):
+            completion = openai.Completion.create(
+                engine=self.model_engine,
+                prompt=chunk,
+                max_tokens=1024,
+                n=1,
+                stop=None,
+                temperature=self.temperature,
+            )
         response = completion.choices[0].text
         return response
+    
+    def split_prompt(self, prompt, chunk_size=2048, overlap=128):
+        ''' Split a prompt into chunks of a given size '''
+        encoding = tiktoken.get_encoding("p50k_base")
+        tokens = encoding.encode(prompt)
+
+        for i in range(0, len(tokens), chunk_size - overlap):
+            yield encoding.decode(tokens[i: i + chunk_size])

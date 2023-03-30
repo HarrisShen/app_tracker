@@ -241,15 +241,23 @@ def details(pid):
 @bp.route("/gpt-parse", methods=["POST"])
 def gpt_parse():
     url = request.get_json()["url"]
-    r = requests.get(url)
-    soup = BeautifulSoup(r.text, "html.parser")
-    text = soup.body
-    # text = soup.select('script[type="application/ld+json"]')[0].text.strip()
-    prompt = f'''
-        This is a job posting from "{url}", please parse the following information: company name, 
-        job(position/program) title, job description, job requirements, job location, job type, 
-        shool year requirement, visa/sponsorship requirement, application deadline. Response in JSON format.
-        Here is the body string of the job web page:
-        {text}'''
-    response = gptAPI.getResponse(prompt=prompt)
-    return jsonify(json.load(response))
+    try:
+        r = requests.get(url)
+        soup = BeautifulSoup(r.text, "html.parser")
+        text = soup.body.text
+        prompt = f'''
+            You will be given a job posting webpage from "{url}", please extract following information: company name, 
+            job(position/program) title, job description, job requirements, technology stack, job location, job type, 
+            shool year requirement, visa/sponsorship requirement, application deadline. You should do the parse based 
+            on given text only. Respond in JSON format without any redundant characters. The whole response string 
+            should be one JSON object, and be able to be fed into programming languages directly. Use these keys: 
+            "company", "title", "description", "requirements", "techStack", "location", "type", "schoolYear", "visaSponsorship", 
+            "deadline". Use "None" (as a string) if the information is not available and yyyy-mm-dd format for deadline date.
+            Here is the body string of the job web page:
+            {text}'''
+        response = gptAPI.get_response(prompt=prompt).strip()
+        response = response[response.find("{"):]
+        print(response)
+        return jsonify(json.loads(response))
+    except Exception as e:
+        return jsonify({"error": str(e)})
