@@ -10,5 +10,6 @@ setup(
         'openai',
         'requests',
         'beautifulsoup4',
+        'tiktoken',
     ],
 )
